@@ -1,0 +1,5 @@
+{
+  "name": "Copy of FDA Document Intelligence Workbench-111225",
+  "description": "An advanced web application for document analysis and multi-agent processing, inspired by intelligence workbenches. It features OCR, text analysis, agent-based workflows with follow-up question generation, and an analytics dashboard, all powered by the Gemini API.",
+  "requestFramePermissions": []
+}
