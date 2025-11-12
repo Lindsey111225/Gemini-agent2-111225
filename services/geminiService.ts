@@ -49,7 +49,7 @@ export const extractKeywords = async (ai: GoogleGenAI, text: string): Promise<st
     }
 };
 
-export const runAgent = async (ai: GoogleGenAI, prompt: string, context: string): Promise<AgentRunResult> => {
+export const runAgent = async (ai: GoogleGenAI, prompt: string, context: string, model: string): Promise<AgentRunResult> => {
     try {
         const fullPrompt = `
             ${prompt}
@@ -63,7 +63,7 @@ export const runAgent = async (ai: GoogleGenAI, prompt: string, context: string)
         `;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-pro',
+            model: model,
             contents: fullPrompt,
             config: {
                 responseMimeType: "application/json",

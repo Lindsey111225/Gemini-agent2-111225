@@ -36,7 +36,7 @@ const App: React.FC = () => {
         try {
             const ai = new GoogleGenAI({ apiKey });
             return {
-                runAgent: (prompt: string, context: string) => runAgent(ai, prompt, context),
+                runAgent: (prompt: string, context: string, model: string) => runAgent(ai, prompt, context, model),
                 extractKeywords: (text: string) => extractKeywords(ai, text),
                 runOcrOnImage: (base64Image: string) => runOcrOnImage(ai, base64Image),
             };
@@ -73,6 +73,14 @@ const App: React.FC = () => {
     const handleDeleteDocument = (id: string) => {
         setDocuments(docs => docs.filter(d => d.id !== id));
         setOcrResults(results => results.filter(r => r.documentId !== id));
+    };
+
+    const handleUpdateDocumentContent = (id: string, newContent: string) => {
+        setDocuments(docs => docs.map(d => d.id === id ? { ...d, content: newContent } : d));
+    };
+
+    const handleUpdateCombinedText = (newText: string) => {
+        setCombinedText(newText);
     };
 
     const handleRunOcr = useCallback(async (documentId: string) => {
@@ -112,16 +120,16 @@ const App: React.FC = () => {
     const handleCombineText = useCallback(() => {
         let fullText = '';
         documents.forEach(doc => {
+            fullText += `\n\n# Document: ${doc.name}\n\n---\n\n`;
             if (doc.ocrPages && doc.ocrPages.length > 0) {
-                fullText += `--- Document: ${doc.name} ---\n\n`;
                 doc.ocrPages.forEach(page => {
-                    fullText += `Page ${page.pageNumber}:\n${page.text}\n\n`;
+                    fullText += `## Page ${page.pageNumber}\n\n${page.text}\n\n`;
                 });
             } else if (doc.content) {
-                fullText += `--- Document: ${doc.name} ---\n\n${doc.content}\n\n`;
+                fullText += `${doc.content}\n\n`;
             }
         });
-        setCombinedText(fullText);
+        setCombinedText(fullText.trim());
         if (fullText) {
           setActiveTab(Tab.ANALYSIS);
         }
@@ -151,7 +159,7 @@ const App: React.FC = () => {
 
         handleSetLoading(`agent-${agent.id}`, true);
         try {
-            const result = await geminiService.runAgent(agent.prompt, combinedText);
+            const result = await geminiService.runAgent(agent.prompt, combinedText, agent.model);
             const newResult: AgentResult = {
                 agentId: agent.id,
                 agentName: agent.name,
@@ -187,6 +195,7 @@ const App: React.FC = () => {
                             documents={documents}
                             onFilesUpload={handleFilesUpload}
                             onDeleteDocument={handleDeleteDocument}
+                            onUpdateDocumentContent={handleUpdateDocumentContent}
                             onCombineText={handleCombineText}
                             onPreviewDocument={setPreviewDoc}
                             isLoading={isLoading['upload']}
@@ -203,6 +212,7 @@ const App: React.FC = () => {
                     {activeTab === Tab.ANALYSIS && (
                         <AnalysisView
                             combinedText={combinedText}
+                            onUpdateCombinedText={handleUpdateCombinedText}
                             keywords={keywords}
                             analysisResult={analysisResult}
                             isLoading={isLoading['analysis']}

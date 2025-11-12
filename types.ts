@@ -29,6 +29,7 @@ export interface Agent {
   description: string;
   prompt: string;
   icon: React.ComponentType<{ className?: string }>;
+  model: string;
 }
 
 export interface AgentRunResult {

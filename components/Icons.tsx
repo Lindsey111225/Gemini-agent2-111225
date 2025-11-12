@@ -96,3 +96,16 @@ export const CloseIcon: React.FC<IconProps> = ({ className }) => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
 );
+
+export const EditIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+    </svg>
+);
+
+export const CogIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-1.007 1.11-1.227l.28-.108c.553-.22 1.158-.22 1.71 0l.28.108c.55.22 1.02.685 1.11 1.227l.086.518c.092.552.348 1.05.718 1.42l.37.37c.37.37.868.627 1.42.718l.518.086c.542.09 1.007.56 1.227 1.11l.108.28c.22.553.22 1.158 0 1.71l-.108.28c-.22.55-.685 1.02-1.227 1.11l-.518.086c-.552.092-1.05.348-1.42.718l-.37.37c-.37.37-.627.868-.718 1.42l-.086.518c-.09.542-.56 1.007-1.11 1.227l-.28.108c-.553-.22-1.158-.22-1.71 0l-.28-.108c-.55-.22-1.02-.685-1.11-1.227l-.086-.518c-.092-.552-.348-1.05-.718-1.42l-.37-.37c-.37-.37-.868-.627-1.42-.718l-.518-.086c-.542-.09-1.007-.56-1.227-1.11l-.108-.28c-.22-.553-.22-1.158 0-1.71l.108-.28c.22-.55.685-1.02 1.227-1.11l.518-.086c.552-.092 1.05-.348 1.42-.718l.37-.37c.37-.37.627.868.718-1.42l.086-.518z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+    </svg>
+);

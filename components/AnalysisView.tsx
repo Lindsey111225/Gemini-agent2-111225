@@ -5,12 +5,13 @@ import { Spinner } from './Spinner';
 
 interface AnalysisViewProps {
     combinedText: string;
+    onUpdateCombinedText: (newText: string) => void;
     keywords: string[];
     analysisResult: AnalysisResult | null;
     isLoading: boolean;
 }
 
-export const AnalysisView: React.FC<AnalysisViewProps> = ({ combinedText, keywords, analysisResult, isLoading }) => {
+export const AnalysisView: React.FC<AnalysisViewProps> = ({ combinedText, onUpdateCombinedText, keywords, analysisResult, isLoading }) => {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-64 text-slate-400">
@@ -27,10 +28,13 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({ combinedText, keywor
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-                <h2 className="text-xl font-bold text-white mb-4">Combined Document Text</h2>
-                <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-800 h-[600px] overflow-y-auto">
-                    <pre className="text-sm text-slate-300 whitespace-pre-wrap font-sans">{combinedText}</pre>
-                </div>
+                <h2 className="text-xl font-bold text-white mb-4">Combined Document Editor</h2>
+                <textarea
+                    className="w-full h-[600px] bg-slate-800/50 p-4 rounded-lg border border-slate-800 text-sm text-slate-300 whitespace-pre-wrap font-sans focus:outline-none focus:ring-2 focus:ring-primary-500 transition-shadow"
+                    value={combinedText}
+                    onChange={(e) => onUpdateCombinedText(e.target.value)}
+                    placeholder="Combined document text... You can edit it here."
+                />
             </div>
             <div className="lg:col-span-1 space-y-8">
                 <div>

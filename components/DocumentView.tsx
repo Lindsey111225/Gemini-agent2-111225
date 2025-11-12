@@ -1,19 +1,25 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { DocumentFile } from '../types';
-import { FileIcon, TrashIcon, CombineIcon, UploadIcon, PreviewIcon } from './Icons';
+import { FileIcon, TrashIcon, CombineIcon, UploadIcon, PreviewIcon, EditIcon } from './Icons';
 
 interface DocumentViewProps {
     documents: DocumentFile[];
     onFilesUpload: (files: FileList) => void;
     onDeleteDocument: (id: string) => void;
+    onUpdateDocumentContent: (id: string, newContent: string) => void;
     onCombineText: () => void;
     onPreviewDocument: (doc: DocumentFile) => void;
     isLoading: boolean;
 }
 
-export const DocumentView: React.FC<DocumentViewProps> = ({ documents, onFilesUpload, onDeleteDocument, onCombineText, onPreviewDocument, isLoading }) => {
+export const DocumentView: React.FC<DocumentViewProps> = ({ documents, onFilesUpload, onDeleteDocument, onUpdateDocumentContent, onCombineText, onPreviewDocument, isLoading }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [editingDocId, setEditingDocId] = useState<string | null>(null);
+
+    const toggleEditor = (docId: string) => {
+        setEditingDocId(prevId => prevId === docId ? null : docId);
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -54,21 +60,37 @@ export const DocumentView: React.FC<DocumentViewProps> = ({ documents, onFilesUp
                     <ul role="list" className="divide-y divide-slate-800">
                         {documents.length > 0 ? (
                             documents.map((doc) => (
-                                <li key={doc.id} className="flex items-center justify-between p-4">
-                                    <div className="flex items-center gap-4">
-                                        <FileIcon className="h-6 w-6 text-slate-500" />
-                                        <span className="text-sm font-medium text-slate-200">{doc.name}</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        {doc.type === 'application/pdf' && doc.file && (
-                                            <button onClick={() => onPreviewDocument(doc)} title="Preview PDF" className="text-slate-500 hover:text-primary-400 transition-colors">
-                                                <PreviewIcon className="h-5 w-5" />
+                                <li key={doc.id} className="p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <FileIcon className="h-6 w-6 text-slate-500" />
+                                            <span className="text-sm font-medium text-slate-200">{doc.name}</span>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            {doc.type === 'application/pdf' && doc.file && (
+                                                <button onClick={() => onPreviewDocument(doc)} title="Preview PDF" className="text-slate-500 hover:text-primary-400 transition-colors">
+                                                    <PreviewIcon className="h-5 w-5" />
+                                                </button>
+                                            )}
+                                            {doc.type !== 'application/pdf' && (
+                                                <button onClick={() => toggleEditor(doc.id)} title="Edit Content" className={`transition-colors ${editingDocId === doc.id ? 'text-primary-400' : 'text-slate-500 hover:text-primary-400'}`}>
+                                                    <EditIcon className="h-5 w-5" />
+                                                </button>
+                                            )}
+                                            <button onClick={() => onDeleteDocument(doc.id)} title="Delete Document" className="text-slate-500 hover:text-red-500 transition-colors">
+                                                <TrashIcon className="h-5 w-5" />
                                             </button>
-                                        )}
-                                        <button onClick={() => onDeleteDocument(doc.id)} title="Delete Document" className="text-slate-500 hover:text-red-500 transition-colors">
-                                            <TrashIcon className="h-5 w-5" />
-                                        </button>
+                                        </div>
                                     </div>
+                                    {editingDocId === doc.id && (
+                                        <div className="mt-4">
+                                            <textarea
+                                                className="w-full h-48 bg-slate-900 border border-slate-700 rounded-md p-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                                value={doc.content}
+                                                onChange={(e) => onUpdateDocumentContent(doc.id, e.target.value)}
+                                            />
+                                        </div>
+                                    )}
                                 </li>
                             ))
                         ) : (

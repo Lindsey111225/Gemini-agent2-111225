@@ -1,4 +1,3 @@
-
 import { AnalysisResult, WordFrequency } from '../types';
 
 // A simple list of English stop words.
@@ -17,7 +16,8 @@ const STOP_WORDS = new Set([
 
 export const analyzeText = (text: string): AnalysisResult => {
     const charCount = text.length;
-    const words = text.match(/\b\w+\b/g) || [];
+    // FIX: Add explicit type annotation to `words` to prevent incorrect type inference of `never[]`.
+    const words: string[] = text.match(/\b\w+\b/g) || [];
     const wordCount = words.length;
 
     const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
